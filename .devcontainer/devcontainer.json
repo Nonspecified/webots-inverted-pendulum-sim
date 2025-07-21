@@ -1,10 +1,7 @@
 {
-  "name": "Webots Inverted Pendulum",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  "forwardPorts": [5901, 6080],
-  "remoteUser": "vscode",
+  "name": "Clean Ubuntu",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "forwardPorts": [],
   "customizations": {
     "vscode": {
       "extensions": ["ms-python.python"]
