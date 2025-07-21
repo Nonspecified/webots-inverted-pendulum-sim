@@ -34,11 +34,11 @@ RUN apt-get update && apt-get install -y \
   libglu1-mesa
 
 # Install Webots manually
-RUN wget https://github.com/cyberbotics/webots/releases/download/R2023b/webots_2023b_ubuntu-2022.tar.bz2 && \
-  tar -xjf webots_2023b_ubuntu-2022.tar.bz2 && \
-  mv webots_2023b /usr/local/webots && \
-  ln -s /usr/local/webots/webots /usr/bin/webots && \
-  rm webots_2023b_ubuntu-2022.tar.bz2
+RUN wget https://github.com/cyberbotics/webots/releases/download/R2023b/webots-R2023b-x86-64.tar.bz2 && \
+    tar -xjf webots-R2023b-x86-64.tar.bz2 && \
+    mv webots-R2023b /usr/local/webots && \
+    ln -s /usr/local/webots/webots /usr/bin/webots && \
+    rm webots-R2023b-x86-64.tar.bz2
 
 # Set display environment variable
 ENV DISPLAY=:1
