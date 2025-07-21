@@ -1,23 +1,23 @@
-# Start from base Ubuntu
+# Use official Ubuntu base
 FROM ubuntu:22.04
 
-# Set environment for non-interactive installs
+# Prevent user prompts during package install
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install basic tools and X11/VNC environment
+# Update and install required tools and GUI/VNC/Webots dependencies
 RUN apt-get update && apt-get install -y \
-  sudo \
   wget \
   curl \
+  unzip \
+  git \
   python3 \
   python3-pip \
-  git \
+  sudo \
   x11vnc \
   fluxbox \
   novnc \
   websockify \
   xvfb \
-  unzip \
   supervisor \
   libnss3 \
   libegl1 \
@@ -31,17 +31,18 @@ RUN apt-get update && apt-get install -y \
   libgtk-3-0 \
   libxrandr2 \
   libgbm1 \
-  libglu1-mesa
+  libglu1-mesa && \
+  rm -rf /var/lib/apt/lists/*
 
-# Install Webots manually
-RUN wget https://github.com/cyberbotics/webots/releases/download/R2023b/webots-R2023b-x86-64.tar.bz2 && \
-    tar -xjf webots-R2023b-x86-64.tar.bz2 && \
-    mv webots-R2023b /usr/local/webots && \
+# Install Webots R2025a
+RUN wget https://github.com/cyberbotics/webots/releases/download/R2025a/webots-R2025a-x86-64.tar.bz2 && \
+    tar -xjf webots-R2025a-x86-64.tar.bz2 && \
+    mv webots-R2025a /usr/local/webots && \
     ln -s /usr/local/webots/webots /usr/bin/webots && \
-    rm webots-R2023b-x86-64.tar.bz2
+    rm webots-R2025a-x86-64.tar.bz2
 
-# Set display environment variable
+# Set default display variable for X11 GUI
 ENV DISPLAY=:1
 
-# Create working directory
+# Set working directory (where student files live)
 WORKDIR /workspace
