@@ -1,29 +1,47 @@
-FROM cyberbotics/webots:R2023b-ubuntu
+# Start from base Ubuntu
+FROM ubuntu:22.04
 
-# Install Python and GUI/VNC tools
+# Set environment for non-interactive installs
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install basic tools and X11/VNC environment
 RUN apt-get update && apt-get install -y \
+  sudo \
+  wget \
+  curl \
+  python3 \
   python3-pip \
+  git \
   x11vnc \
   fluxbox \
   novnc \
   websockify \
-  wget \
-  supervisor
+  xvfb \
+  unzip \
+  supervisor \
+  libnss3 \
+  libegl1 \
+  libxcomposite1 \
+  libxcursor1 \
+  libxdamage1 \
+  libxi6 \
+  libxtst6 \
+  libasound2 \
+  libatk1.0-0 \
+  libgtk-3-0 \
+  libxrandr2 \
+  libgbm1 \
+  libglu1-mesa
 
-# Set up noVNC
-RUN mkdir -p /opt/novnc/utils/websockify
-WORKDIR /opt/novnc
-RUN wget https://github.com/novnc/noVNC/archive/refs/heads/master.zip && \
-    unzip master.zip && mv noVNC-master/* . && rm -rf noVNC-master master.zip
-RUN wget https://github.com/novnc/websockify/archive/refs/heads/master.zip && \
-    unzip master.zip && mv websockify-master/* utils/websockify && rm -rf websockify-master master.zip
+# Install Webots manually
+RUN wget https://github.com/cyberbotics/webots/releases/download/R2023b/webots_2023b_ubuntu-2022.tar.bz2 && \
+  tar -xjf webots_2023b_ubuntu-2022.tar.bz2 && \
+  mv webots_2023b /usr/local/webots && \
+  ln -s /usr/local/webots/webots /usr/bin/webots && \
+  rm webots_2023b_ubuntu-2022.tar.bz2
 
-# Set VNC password to 'webots' and configure display
-RUN mkdir -p /root/.vnc && \
-    x11vnc -storepasswd webots /root/.vnc/passwd
+# Set display environment variable
+ENV DISPLAY=:1
 
-# Expose the VNC ports
-EXPOSE 5901 6080
-
-# Create workspace directory
+# Create working directory
 WORKDIR /workspace
