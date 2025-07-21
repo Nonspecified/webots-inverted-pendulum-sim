@@ -1,18 +1,20 @@
-FROM ubuntu:22.04
+# Start from Cyberbotics' official Webots image (Ubuntu 22.04 + Webots preinstalled)
+FROM cyberbotics/webots:R2025a-ubuntu22.04
 
+# Set environment to prevent interactive prompts during build
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Install noVNC, GUI, VNC, and helper tools
 RUN apt-get update && apt-get install -y \
-  python3 python3-pip wget curl unzip git sudo \
+  python3 python3-pip \
   x11vnc fluxbox novnc websockify xvfb \
-  libgtk-3-0 libnss3 libegl1 libasound2 libxi6 libxrandr2 \
-  libxcomposite1 libxcursor1 libxdamage1 libatk1.0-0 libgbm1 libglu1-mesa
+  libnss3 libegl1 libasound2 libxi6 libxrandr2 \
+  libatk1.0-0 libxcomposite1 libxcursor1 libxdamage1 \
+  libgtk-3-0 libgbm1 libglu1-mesa \
+  supervisor git unzip curl wget
 
-RUN wget https://github.com/cyberbotics/webots/releases/download/R2025a/webots-R2025a-x86-64.tar.bz2 && \
-    tar -xjf webots-R2025a-x86-64.tar.bz2 && \
-    mv webots-R2025a /usr/local/webots && \
-    ln -s /usr/local/webots/webots /usr/bin/webots && \
-    rm webots-R2025a-x86-64.tar.bz2
-
+# Set DISPLAY environment variable for GUI apps
 ENV DISPLAY=:1
+
+# Set working directory inside container
 WORKDIR /workspace
