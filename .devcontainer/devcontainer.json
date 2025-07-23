@@ -1,7 +1,11 @@
 {
-  "name": "Clean Ubuntu",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-  "forwardPorts": [],
+  "name": "Webots Ready Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "forwardPorts": [6080],
+  "remoteUser": "vscode",
+  "postCreateCommand": "x11vnc -storepasswd webots ~/.vnc/passwd",
   "customizations": {
     "vscode": {
       "extensions": ["ms-python.python"]
