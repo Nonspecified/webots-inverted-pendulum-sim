@@ -5,7 +5,8 @@
   },
   "forwardPorts": [6080],
   "remoteUser": "vscode",
-  "postCreateCommand": "mkdir -p ~/.vnc && x11vnc -storepasswd webots ~/.vnc/passwd",
+  "postCreateCommand": "mkdir -p ~/.vnc && x11vnc -storepasswd webots ~/.vnc/passwd && [ -d /usr/share/novnc ] || sudo git clone https://github.com/novnc/noVNC.git /usr/share/novnc",
+  "postStartCommand": "./start-webots.sh",
   "customizations": {
     "vscode": {
       "extensions": ["ms-python.python"]
