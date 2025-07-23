@@ -1,12 +1,10 @@
+# .devcontainer/Dockerfile
+
 FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Create vscode user (needed for Codespaces compatibility)
-ARG USERNAME=vscode
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-
+# Install dependencies and Webots runtime libraries
 RUN apt-get update && apt-get install -y \
   sudo curl wget git unzip python3 python3-pip \
   xvfb x11vnc fluxbox novnc websockify \
@@ -16,10 +14,8 @@ RUN apt-get update && apt-get install -y \
   libgtk-3-0 libgbm1 libx11-xcb1 libxcb-icccm4 libxcb-image0 \
   libxcb-keysyms1 libxcb-render-util0 libxcb-xkb1 libxcb-xinerama0 \
   libpulse0 libwayland-client0 libwayland-cursor0 libwayland-egl1 \
-  libdbus-1-3 libxcb-cursor0 && \
-  groupadd --gid $USER_GID $USERNAME && \
-  useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
-  echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+  libdbus-1-3 libxcb-cursor0 qt5-gtk-platformtheme qtbase5-dev \
+  libxkbcommon-x11-0
 
 # Install Webots R2025a
 RUN wget https://github.com/cyberbotics/webots/releases/download/R2025a/webots-R2025a-x86-64.tar.bz2 && \
@@ -28,7 +24,11 @@ RUN wget https://github.com/cyberbotics/webots/releases/download/R2025a/webots-R
   ln -s /usr/local/webots/webots /usr/bin/webots && \
   rm webots-R2025a-x86-64.tar.bz2
 
+# Environment setup
 ENV DISPLAY=:1
 ENV PATH=$PATH:/usr/local/webots
+ENV QT_QPA_PLATFORM_PLUGIN_PATH=/usr/local/webots/lib/qt/plugins/platforms
+ENV LD_LIBRARY_PATH=/usr/local/webots/lib:$LD_LIBRARY_PATH
+
+# Set workspace
 WORKDIR /workspace
-USER vscode
