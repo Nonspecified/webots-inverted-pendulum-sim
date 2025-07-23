@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y \
   libxcb-keysyms1 libxcb-render-util0 libxcb-xkb1 libxcb-xinerama0 \
   libpulse0 libwayland-client0 libwayland-cursor0 libwayland-egl1 \
   libdbus-1-3 libxcb-cursor0 qt5-gtk-platformtheme qtbase5-dev \
-  libxkbcommon-x11-0
+  libxkbcommon-x11-0 && \
+  rm -rf /var/lib/apt/lists/*
 
 # Install Webots R2025a
 RUN wget https://github.com/cyberbotics/webots/releases/download/R2025a/webots-R2025a-x86-64.tar.bz2 && \
@@ -32,3 +33,11 @@ ENV LD_LIBRARY_PATH=/usr/local/webots/lib:$LD_LIBRARY_PATH
 
 # Set workspace
 WORKDIR /workspace
+
+# Ensure non-root user exists for Codespaces compatibility
+RUN if ! id -u vscode > /dev/null 2>&1; then \
+  useradd -m -s /bin/bash vscode && \
+  echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers; \
+fi
+
+USER vscode
